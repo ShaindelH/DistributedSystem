@@ -8,37 +8,37 @@ import java.util.ArrayList;
 
 public class ReadingThread extends Thread {
 	private BufferedReader reader;
-	private ArrayList <String> readingList;
+	private ArrayList<String> readingList;
 	private Object lock;
-	
-	
-	public ReadingThread(Socket socket, ArrayList <String> readingList, Object lock) {
-		 readingList  = new ArrayList<>();
-		 this.lock;
-		 
-		try (
-				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));)
-		{} catch (IOException e) {
-			
+
+	public ReadingThread(Socket socket, ArrayList<String> readingList, Object lock) {
+		readingList = new ArrayList<>();
+		this.lock = lock;
+
+		try {
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
 		}
-		
-	}
-	
-	@Override
-	public void run() {
-		String readingIn;
-		
-		
-		while (reader.readLine() != null) {
-			readingIn = reader.readLine();
-			
-			synchronized(lock) {
-				readingList.add(readingIn);
-			}
-			
-		}
-		
-	
+
 	}
 
+	@Override
+	public void run() {
+		String readingIn = null;
+
+		try {
+			do {
+
+				readingIn = reader.readLine();
+
+				synchronized (lock) {
+					readingList.add(readingIn);
+				}
+
+			} while (reader.readLine() != null);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
