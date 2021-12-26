@@ -12,15 +12,19 @@ public class Client2 {
 		try (Socket socket = new Socket("127.0.0.1", 9085);) {
 			
 			ArrayList<String> jobsList = new ArrayList<String>();
-			Object readingLOCK = new Object();
+			Object lock = new Object();
 			
-			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, readingLOCK);
+			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock);
 			ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
-			WritingThread writeToMasterThread = new WritingThread(socket,jobsList);
+			WritingThread writeToMasterThread = new WritingThread(socket,jobsList, lock);
 			
 			readFromUser.start();
 			writeToMasterThread.start();
 			readFromMaster.start();
+			
+			readFromUser.join();
+			writeToMasterThread.join();
+			readFromMaster.join();
 			
 			
 		} catch (Exception ex) {

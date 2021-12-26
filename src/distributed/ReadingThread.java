@@ -9,33 +9,48 @@ import java.util.ArrayList;
 public class ReadingThread extends Thread {
 	private BufferedReader reader;
 	private ArrayList<String> readingList;
-	private Object lock;
+	public static Object lock;
 
-	public ReadingThread(Socket socket, ArrayList<String> readingList, Object lock) {
+	public ReadingThread(Socket socket, ArrayList<String> readingList) {
 		readingList = new ArrayList<>();
-		this.lock = lock;
+		this.lock = new Object();
 
 		try {
+
+			reader = new BufferedReader(new InputStreamReader(System.in));
+
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
 		} catch (IOException e) {
 		}
 
 	}
 
 	@Override
-	public void run() {
-		String readingIn = null;
-
+	public void run() {	
 		try {
-			do {
+			while(true){
+				String readingIn;
+				//readingIn = reader.readLine();
+				while ((readingIn=reader.readLine()) != null) {
+					System.out.println("Read job: " + readingIn);
 
-				readingIn = reader.readLine();
+					synchronized (lock) {
 
-				synchronized (lock) {
-					readingList.add(readingIn);
+						readingList.add(readingIn);
+					}
+
+					System.out.println("Added job to list");
 				}
-
-			} while (reader.readLine() != null);
+				
+				try {
+					sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} 
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();

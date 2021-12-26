@@ -12,21 +12,21 @@ public class Client1 {
 		try (Socket socket = new Socket("127.0.0.1", 8080);) {
 			
 			ArrayList<String> jobsList = new ArrayList<String>();
-			Object readingLOCK = new Object();
+			Object lock = new Object();
 			
-			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, readingLOCK);
-			WritingThread writeToMasterThread = new WritingThread(socket, jobsList, readingLOCK);
+			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock);
+			WritingThread writeToMasterThread = new WritingThread(socket, jobsList, lock);
 			
 			readFromUser.start();
 			writeToMasterThread.start();
 			
 			readFromUser.join();
-			writeToMasterThread.join();
+			writeToMasterThread.join();			
 			
+			ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
 			
-			//readFromMaster.start();
-			
-			//ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
+			readFromMaster.start();
+			readFromMaster.join();
 
 			
 		} catch (Exception ex) {

@@ -12,43 +12,55 @@ public class Master {
 	public static void main(String[] args) {
 
 		ArrayList<String> jobsList = new ArrayList<String>();
-		
+		System.out.println("Master connected");
+
 		ArrayList<String> slaveAJobs = new ArrayList<String>();
 		ArrayList<String> slaveBJobs = new ArrayList<String>();
-		
+
 		ArrayList<String> completedJobs = new ArrayList<String>();
+		
+		Object lock = new Object();
 
-		Object readingLOCK = new Object();
-		Object readingLOCK_BOTH = new Object();
-
-		try (ServerSocket serverSocket = new ServerSocket(8080);
-				Socket socket = serverSocket.accept();
-				PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));) {
-
-			ReadingThread clientThread = new ReadingThread(socket, jobsList, readingLOCK);
-			clientThread.start();
-
-			// CHANGE SOCKETS IN WRITING AND READING:)
+		try (ServerSocket serverSocketClient1 = new ServerSocket(8080);
+				Socket socketClient1 = serverSocketClient1.accept();
+				ServerSocket serverSocketClient2 = new ServerSocket(9085);
+				Socket socketClient2 = serverSocketClient2.accept();
+				ServerSocket slaveASocket = new ServerSocket(9090);
+				Socket slaveA = slaveASocket.accept();
+				ServerSocket slaveBSocket = new ServerSocket(8085);
+				Socket slaveB = slaveBSocket.accept();
+				) {
 			
-			WritingThread writingThreadA = new WritingThread(socket, slaveAJobs);
-			WritingThread writingThreadB = new WritingThread(socket, slaveBJobs);
-
-			writingThreadA.start();
-			writingThreadB.start();
-
-			ReadingThread readingThreadA = new ReadingThread(socket, completedJobs, readingLOCK_BOTH);
-			ReadingThread readingThreadB = new ReadingThread(socket, completedJobs, readingLOCK_BOTH);
 			
-			//START READING THREADS
-			readingThreadA.start();
-			readingThreadB.start();
-			
-			while (true) {
-				divideJobs(socket, jobsList, readingLOCK, slaveAJobs, slaveBJobs);
-			}
+			Object lockA = new Object();
+			Object lockB = new Object(); 
 
+			MasterReadingThread readFromClient1 = new MasterReadingThread(socketClient1, lockA, lockB, slaveAJobs, slaveBJobs);
+			//MasterReadingThread readFromClient2 = new MasterReadingThread(socketClient2, lockA, lockB, slaveAJobs, slaveBJobs);
 			
+			readFromClient1.start();
+			readFromClient1.join();
+		
+			//readFromClient2.start();
+			
+			//WritingThread writingThreadA = new WritingThread(slaveA, slaveAJobs, lock);
+			//WritingThread writingThreadB = new WritingThread(slaveB, slaveBJobs, lock);
+
+			//writingThreadA.start();
+			//writingThreadA.join();
+			
+			//writingThreadB.start();
+			//writingThreadB.join();
+
+			//ReadingThread readingThreadA = new ReadingThread(slaveA, completedJobs);
+			//ReadingThread readingThreadB = new ReadingThread(slaveB, completedJobs);
+
+			// START READING THREADS
+			//readingThreadA.start();
+			//readingThreadB.start();
+			
+			//WritingThread writeToClient1 = new WritingThread(completedJobs);
+
 
 		} catch (Exception ex) {
 
@@ -56,29 +68,4 @@ public class Master {
 
 	}
 
-	public static void divideJobs(Socket socket, ArrayList<String> jobsList, Object readingLOCK,
-			ArrayList<String> slaveAJobs, ArrayList<String> slaveBJobs) {
-		final int OPTIMAL = 2;
-		final int NONOPTIMAL = 10;
-		int aCounter = 0;
-		int bCounter = 0;
-
-		String job = jobsList.get(0);
-
-		if (job.equals("A")) {
-			if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
-				slaveAJobs.add(job);
-			} else {
-				slaveBJobs.add(job);
-			}
-		} else {
-			if (bCounter + OPTIMAL < aCounter + NONOPTIMAL) {
-				slaveBJobs.add(job);
-			} else {
-				slaveAJobs.add(job);
-			}
-		}
-		
-		jobsList.remove(0);
-	}
 }

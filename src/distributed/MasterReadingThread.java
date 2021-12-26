@@ -26,6 +26,7 @@ public class MasterReadingThread extends Thread {
 
 		} catch (IOException e) {
 			System.out.println("Error occurred");
+			e.printStackTrace();
 		}
 	}
 
@@ -44,7 +45,6 @@ public class MasterReadingThread extends Thread {
 			try {
 				sleep(4000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -64,7 +64,7 @@ public class MasterReadingThread extends Thread {
 
 			}
 			System.out.println("JOb " + job);
-			if (job == null) {
+			if (job == "Empty") {
 				continue;
 			}
 			if (job.charAt(0) == 'A') {
