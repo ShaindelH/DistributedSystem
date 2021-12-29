@@ -41,7 +41,7 @@ public class MasterReadingThread extends Thread {
 		
 		while (true) {
 			
-
+			System.out.println("In Master reading loop");
 			try {
 				sleep(4000);
 			} catch (InterruptedException e) {
@@ -51,8 +51,9 @@ public class MasterReadingThread extends Thread {
 			String job = null;
 			try {
 				job = reader.readLine();
-				if (job == null) {
-					job = "Empty";
+				if (job == null || job.isEmpty() || job.isBlank()) {
+					
+					continue;
 				}
 				else
 					System.out.println(job + " received");
@@ -60,13 +61,10 @@ public class MasterReadingThread extends Thread {
 			catch (Exception ex) {
 				
 				ex.printStackTrace();
-				System.out.println("IN exception");
 
 			}
-			System.out.println("JOb " + job);
-			if (job == "Empty") {
-				continue;
-			}
+			System.out.println("Job " + job);
+			
 			if (job.charAt(0) == 'A') {
 				if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
 					synchronized (lockA) {

@@ -26,8 +26,9 @@ public class WritingThread extends Thread {
 		while (true) {
 			System.out.println("In Writing. Size: " + jobs.size());
 
-			synchronized (lock) {
-				if (jobs.size() > 0) {
+			if (jobs.size() > 0) {
+				synchronized (lock) {
+
 					System.out.println(jobs.toString());
 
 					job = jobs.get(0);
@@ -35,7 +36,7 @@ public class WritingThread extends Thread {
 				}
 				writer.println(job);
 				System.out.println("Sent job " + job);
-
+				job = null;
 			}
 
 			try {

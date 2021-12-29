@@ -27,8 +27,8 @@ public class Master {
 				Socket socketClient2 = serverSocketClient2.accept();
 				ServerSocket slaveASocket = new ServerSocket(9090);
 				Socket slaveA = slaveASocket.accept();
-				ServerSocket slaveBSocket = new ServerSocket(8085);
-				Socket slaveB = slaveBSocket.accept();
+				//ServerSocket slaveBSocket = new ServerSocket(8085);
+				//Socket slaveB = slaveBSocket.accept();
 				) {
 			
 			
@@ -36,21 +36,26 @@ public class Master {
 			Object lockB = new Object(); 
 
 			MasterReadingThread readFromClient1 = new MasterReadingThread(socketClient1, lockA, lockB, slaveAJobs, slaveBJobs);
-			//MasterReadingThread readFromClient2 = new MasterReadingThread(socketClient2, lockA, lockB, slaveAJobs, slaveBJobs);
-			
-			readFromClient1.start();
-			readFromClient1.join();
-		
-			//readFromClient2.start();
-			
-			//WritingThread writingThreadA = new WritingThread(slaveA, slaveAJobs, lock);
+			MasterReadingThread readFromClient2 = new MasterReadingThread(socketClient2, lockA, lockB, slaveAJobs, slaveBJobs);
+			WritingThread writingThreadA = new WritingThread(slaveA, slaveAJobs, lock);
 			//WritingThread writingThreadB = new WritingThread(slaveB, slaveBJobs, lock);
-
-			//writingThreadA.start();
-			//writingThreadA.join();
 			
+			readFromClient1.start();			
+			readFromClient2.start();
+			writingThreadA.start();
 			//writingThreadB.start();
+			
+			readFromClient2.join();
+			readFromClient1.join();
+			
+			
+			
+
+			
+			
+			
 			//writingThreadB.join();
+			writingThreadA.join();
 
 			//ReadingThread readingThreadA = new ReadingThread(slaveA, completedJobs);
 			//ReadingThread readingThreadB = new ReadingThread(slaveB, completedJobs);
@@ -63,7 +68,7 @@ public class Master {
 
 
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
 
 	}

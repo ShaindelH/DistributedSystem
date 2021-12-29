@@ -10,8 +10,8 @@ public class KeyboardReaderThread extends Thread {
 	private ArrayList<String> jobsList;
 	private BufferedReader input;
 	private Object readingLOCK;
-	private static int aJobCount = 1;
-	private static int bJobCount = 1;
+	protected static int aJobCount = 1;
+	protected static int bJobCount = 1;
 
 	public KeyboardReaderThread(ArrayList<String> jobsList, Object readingLOCK) {
 		input = new BufferedReader(new InputStreamReader(System.in));

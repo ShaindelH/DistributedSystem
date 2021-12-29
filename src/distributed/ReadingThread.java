@@ -12,48 +12,61 @@ public class ReadingThread extends Thread {
 	public static Object lock;
 
 	public ReadingThread(Socket socket, ArrayList<String> readingList) {
-		readingList = new ArrayList<>();
+		this.readingList = readingList;
 		this.lock = new Object();
 
 		try {
-
-			reader = new BufferedReader(new InputStreamReader(System.in));
 
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 		} catch (IOException e) {
 		}
+		
 
 	}
 
 	@Override
 	public void run() {	
-		try {
+		
 			while(true){
-				String readingIn;
-				//readingIn = reader.readLine();
-				while ((readingIn=reader.readLine()) != null) {
-					System.out.println("Read job: " + readingIn);
-
-					synchronized (lock) {
-
-						readingList.add(readingIn);
-					}
-
-					System.out.println("Added job to list");
-				}
-				
+				System.out.println("In Reading thread");
 				try {
 					sleep(3000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} 
+				
+				String readingIn = null;
+				try {
+					
+				readingIn = reader.readLine();
+				System.out.println("Reading in: " + readingIn);
+				
+				if (readingIn == null || readingIn.isEmpty() || readingIn.isBlank()) {
+					continue;
 				}
-			} 
-			
+				else
+					System.out.println(readingIn + " received");
+				
+				synchronized (lock) {
+						System.out.println("Reading is adding to list");
+						System.out.println("Reading in: " + readingIn);
+						readingList.add(readingIn);
+				}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+					System.out.println("Added job to list");
+				
+				
+				
+			 
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} 
+		
 	}
+		
+	
 }

@@ -16,21 +16,19 @@ public class Client1 {
 			
 			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock);
 			WritingThread writeToMasterThread = new WritingThread(socket, jobsList, lock);
+			ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
 			
 			readFromUser.start();
 			writeToMasterThread.start();
+			readFromMaster.start();
 			
 			readFromUser.join();
 			writeToMasterThread.join();			
-			
-			ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
-			
-			readFromMaster.start();
 			readFromMaster.join();
 
 			
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
 
 	}
