@@ -75,17 +75,17 @@ public class MasterReadingThread extends Thread {
 					}
 				} else {
 					synchronized (lockB) {
-						slaveBJobs.add(job);
+						slaveBJobs.add(jobWithSource);
 					}
 				}
 			} else if (job.charAt(0) == 'B') {
 				if (bCounter + OPTIMAL < aCounter + NONOPTIMAL) {
 					synchronized (lockB) {
-						slaveBJobs.add(job);
+						slaveBJobs.add(jobWithSource);
 					}
 				} else {
 					synchronized (lockA) {
-						slaveAJobs.add(job);
+						slaveAJobs.add(jobWithSource);
 					}
 				}
 			}
