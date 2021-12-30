@@ -43,7 +43,7 @@ public class MasterReadingThread extends Thread {
 			
 			System.out.println("In Master reading loop");
 			try {
-				sleep(4000);
+				sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -69,31 +69,23 @@ public class MasterReadingThread extends Thread {
 				if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
 					synchronized (lockA) {
 						slaveAJobs.add(job);
-						System.out.println("Master sending job " + job + " to Slave A");
 					}
 				} else {
 					synchronized (lockB) {
 						slaveBJobs.add(job);
-						System.out.println("Master sending job " + job + " to Slave B");
 					}
 				}
 			} else if (job.charAt(0) == 'B') {
 				if (bCounter + OPTIMAL < aCounter + NONOPTIMAL) {
 					synchronized (lockB) {
 						slaveBJobs.add(job);
-						System.out.println("Master sending job " + job + " to Slave B");
 					}
 				} else {
 					synchronized (lockA) {
 						slaveAJobs.add(job);
-						System.out.println("Master sending job " + job + " to Slave A");
 					}
 				}
 			}
-
-			System.out.println("Didnt receive job");
-
 		}
-
 	}
 }

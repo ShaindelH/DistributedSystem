@@ -8,8 +8,9 @@ public class WritingThread extends Thread {
 	private PrintWriter writer;
 	private ArrayList<String> jobs;
 	private Object lock;
+	private String message;
 
-	public WritingThread(Socket socket, ArrayList<String> jobs, Object lock) {
+	public WritingThread(Socket socket, ArrayList<String> jobs, Object lock, String message) {
 		try {
 			writer = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
@@ -17,15 +18,16 @@ public class WritingThread extends Thread {
 		}
 		this.jobs = jobs;
 		this.lock = lock;
+		this.message = message;
 	}
 
 	@Override
 	public void run() {
-		System.out.println("Running");
-		String job = null;
+		System.out.println("Writing Thread Running");
+		String job;
 		while (true) {
-			System.out.println("In Writing. Size: " + jobs.size());
-
+			
+			job = null;
 			if (jobs.size() > 0) {
 				synchronized (lock) {
 
@@ -35,12 +37,12 @@ public class WritingThread extends Thread {
 					jobs.remove(job);
 				}
 				writer.println(job);
-				System.out.println("Sent job " + job);
+				System.out.println("Sent job " + job + " to " + message);
 				job = null;
 			}
 
 			try {
-				sleep(5000);
+				sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

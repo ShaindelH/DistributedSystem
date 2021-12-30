@@ -37,34 +37,45 @@ public class Master {
 
 			MasterReadingThread readFromClient1 = new MasterReadingThread(socketClient1, lockA, lockB, slaveAJobs, slaveBJobs);
 			MasterReadingThread readFromClient2 = new MasterReadingThread(socketClient2, lockA, lockB, slaveAJobs, slaveBJobs);
-			WritingThread writingThreadA = new WritingThread(slaveA, slaveAJobs, lock);
-			//WritingThread writingThreadB = new WritingThread(slaveB, slaveBJobs, lock);
+			
+			
 			
 			readFromClient1.start();			
 			readFromClient2.start();
+			
+			WritingThread writingThreadA = new WritingThread(slaveA, slaveAJobs, lockA, "Slave A");
 			writingThreadA.start();
+			
+			//WritingThread writingThreadB = new WritingThread(slaveB, slaveBJobs, lockB);
 			//writingThreadB.start();
 			
-			readFromClient2.join();
-			readFromClient1.join();
 			
 			
+			ReadingThread readingThreadA = new ReadingThread(slaveA, completedJobs, lock, "Slave A");
+			readingThreadA.start();
+			
+			WritingThread writeToClient1 = new WritingThread(socketClient1, completedJobs, lock,"Client 1");
+			writeToClient1.start();
 			
 
-			
+			readFromClient2.join();
+			readFromClient1.join();
 			
 			
 			//writingThreadB.join();
 			writingThreadA.join();
 
-			//ReadingThread readingThreadA = new ReadingThread(slaveA, completedJobs);
-			//ReadingThread readingThreadB = new ReadingThread(slaveB, completedJobs);
+
+			readingThreadA.join();
+			writeToClient1.join();
+			//ReadingThread readingThreadB = new ReadingThread(slaveB, completedJobs, lock);
 
 			// START READING THREADS
-			//readingThreadA.start();
+			
 			//readingThreadB.start();
 			
-			//WritingThread writeToClient1 = new WritingThread(completedJobs);
+			
+			
 
 
 		} catch (Exception ex) {

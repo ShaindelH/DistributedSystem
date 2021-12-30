@@ -12,11 +12,12 @@ public class Client1 {
 		try (Socket socket = new Socket("127.0.0.1", 8080);) {
 			
 			ArrayList<String> jobsList = new ArrayList<String>();
+			ArrayList<String> completedJobs = new ArrayList<>();
 			Object lock = new Object();
 			
 			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock);
-			WritingThread writeToMasterThread = new WritingThread(socket, jobsList, lock);
-			ReadingThread readFromMaster = new ReadingThread(socket, jobsList);
+			WritingThread writeToMasterThread = new WritingThread(socket, jobsList, lock, "Master");
+			ReadingThread readFromMaster = new ReadingThread(socket, completedJobs, lock, "Master");
 			
 			readFromUser.start();
 			writeToMasterThread.start();
