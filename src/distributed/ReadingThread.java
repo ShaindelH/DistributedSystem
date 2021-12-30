@@ -27,7 +27,8 @@ public class ReadingThread extends Thread {
 
 	@Override
 	public void run() {
-
+		String jobWithSource;
+		
 		while (true) {
 			System.out.println("In Reading thread loop");
 			try {
@@ -38,16 +39,19 @@ public class ReadingThread extends Thread {
 
 			String readingIn = null;
 			try {
-
-				readingIn = reader.readLine();
+				jobWithSource = reader.readLine();
+				readingIn = jobWithSource.substring(0, jobWithSource.length() - 1);
 
 				if (readingIn == null || readingIn.isEmpty() || readingIn.isBlank()) {
 					continue;
 				} else {
 					synchronized (lock) {
 						System.out.println(readingIn + " received from " + message);
-						readingList.add(readingIn);
+						readingList.add(jobWithSource);
 					}
+				}
+				if (message.equals("Master")) {
+					System.out.println("Job " + readingIn + " completed");
 				}
 
 			} catch (Exception e) {

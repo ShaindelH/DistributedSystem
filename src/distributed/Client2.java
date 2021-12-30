@@ -14,7 +14,7 @@ public class Client2 {
 			ArrayList<String> jobsList = new ArrayList<String>();
 			Object lock = new Object();
 			
-			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock);
+			KeyboardReaderThread readFromUser = new KeyboardReaderThread(jobsList, lock,"2");
 			ReadingThread readFromMaster = new ReadingThread(socket, jobsList, lock, "Master");
 			WritingThread writeToMasterThread = new WritingThread(socket,jobsList, lock, "Master");
 			

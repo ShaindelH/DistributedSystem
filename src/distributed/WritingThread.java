@@ -24,6 +24,7 @@ public class WritingThread extends Thread {
 	@Override
 	public void run() {
 		System.out.println("Writing Thread Running");
+		String jobWithSource;
 		String job;
 		while (true) {
 			
@@ -31,12 +32,15 @@ public class WritingThread extends Thread {
 			if (jobs.size() > 0) {
 				synchronized (lock) {
 
-					System.out.println(jobs.toString());
-
-					job = jobs.get(0);
-					jobs.remove(job);
+					
+					jobWithSource = jobs.get(0);
+					job=jobWithSource.substring(0,jobWithSource.length()-1);
+					jobs.remove(jobWithSource);
 				}
-				writer.println(job);
+				if(jobWithSource.substring(jobWithSource.length()-1,jobWithSource.length())=="1"){
+					//how are we sending the job to the correct client???
+				}
+				writer.println(jobWithSource);
 				System.out.println("Sent job " + job + " to " + message);
 				job = null;
 			}

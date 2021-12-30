@@ -13,13 +13,15 @@ public class MasterReadingThread extends Thread {
 	private Object lockB;
 	private ArrayList<String> slaveAJobs;
 	private ArrayList<String> slaveBJobs;
+	private String message;
 
 	public MasterReadingThread(Socket socket, Object lockA, Object lockB, ArrayList<String> slaveAJobs,
-			ArrayList<String> slaveBJobs) {
+			ArrayList<String> slaveBJobs, String message) {
 		this.lockA = lockA;
 		this.lockB = lockB;
 		this.slaveAJobs = slaveAJobs;
 		this.slaveBJobs = slaveBJobs;
+		this.message=message;
 
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -40,7 +42,7 @@ public class MasterReadingThread extends Thread {
 
 		
 		while (true) {
-			
+			String jobWithSource=null;
 			System.out.println("In Master reading loop");
 			try {
 				sleep(1000);
@@ -50,13 +52,14 @@ public class MasterReadingThread extends Thread {
 			
 			String job = null;
 			try {
-				job = reader.readLine();
+				jobWithSource = reader.readLine();
+				job=jobWithSource.substring(0,jobWithSource.length()-1);
 				if (job == null || job.isEmpty() || job.isBlank()) {
 					
 					continue;
 				}
 				else
-					System.out.println(job + " received");
+					System.out.println(job + " received from " + message);
 			}
 			catch (Exception ex) {
 				
@@ -68,7 +71,7 @@ public class MasterReadingThread extends Thread {
 			if (job.charAt(0) == 'A') {
 				if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
 					synchronized (lockA) {
-						slaveAJobs.add(job);
+						slaveAJobs.add(jobWithSource);
 					}
 				} else {
 					synchronized (lockB) {

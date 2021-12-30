@@ -12,11 +12,13 @@ public class KeyboardReaderThread extends Thread {
 	private Object readingLOCK;
 	protected static int aJobCount = 1;
 	protected static int bJobCount = 1;
+	private String message;
 
-	public KeyboardReaderThread(ArrayList<String> jobsList, Object readingLOCK) {
+	public KeyboardReaderThread(ArrayList<String> jobsList, Object readingLOCK, String message) {
 		input = new BufferedReader(new InputStreamReader(System.in));
 		this.jobsList = jobsList;
 		this.readingLOCK = readingLOCK;
+		this.message=message;
 
 	}
 
@@ -37,7 +39,7 @@ public class KeyboardReaderThread extends Thread {
 
 				synchronized (readingLOCK) {
 					if (job.equals("A")) {
-						jobsList.add(job + aJobCount);
+						jobsList.add(job + aJobCount + message);
 						System.out.println("Added job to list");
 						System.out.println("Size " + jobsList.size());
 						aJobCount++;

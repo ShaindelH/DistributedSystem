@@ -25,11 +25,13 @@ public class SlaveWritingThread extends Thread {
 	}
 	
 	public void run() {
-		
+		String jobWithSource;
+		String job;
 		while (true) {
 			try {
 			if (!jobs.isEmpty()) {
-				String job = jobs.get(0);
+				jobWithSource = jobs.get(0);
+				job=jobWithSource.substring(0,jobWithSource.length()-1);
 				if (job.charAt(0) == 'A') {
 					sleep(2000);
 					System.out.println("Sleeping 2 seconds");
@@ -40,9 +42,10 @@ public class SlaveWritingThread extends Thread {
 			
 			
 			synchronized(lock) {
-				completedJobs.add(job);
+				completedJobs.add(jobWithSource);
 				jobs.remove(0);
 			}
+			writer.println(job);
 			System.out.println("Sending job " + job + " to Master");
 			}
 		
