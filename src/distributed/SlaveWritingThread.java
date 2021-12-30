@@ -45,7 +45,7 @@ public class SlaveWritingThread extends Thread {
 				completedJobs.add(jobWithSource);
 				jobs.remove(0);
 			}
-			writer.println(job);
+			writer.println(jobWithSource);
 			System.out.println("Sending job " + job + " to Master");
 			}
 		

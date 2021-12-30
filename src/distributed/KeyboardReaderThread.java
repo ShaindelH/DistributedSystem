@@ -35,6 +35,7 @@ public class KeyboardReaderThread extends Thread {
 						System.out.print("You can only input A/B. Please try again. ");
 						job = input.readLine().toUpperCase();
 					}
+					System.out.println();
 				} while (!job.equals("A") && !job.equals("B"));
 
 				synchronized (readingLOCK) {

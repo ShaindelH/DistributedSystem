@@ -37,9 +37,7 @@ public class WritingThread extends Thread {
 					job=jobWithSource.substring(0,jobWithSource.length()-1);
 					jobs.remove(jobWithSource);
 				}
-				if(jobWithSource.substring(jobWithSource.length()-1,jobWithSource.length())=="1"){
-					//how are we sending the job to the correct client???
-				}
+			
 				writer.println(jobWithSource);
 				System.out.println("Sent job " + job + " to " + message);
 				job = null;
