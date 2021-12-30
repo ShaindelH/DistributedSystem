@@ -45,7 +45,7 @@ public class KeyboardReaderThread extends Thread {
 						System.out.println("Size " + jobsList.size());
 						aJobCount++;
 					} else {
-						jobsList.add(job + bJobCount);
+						jobsList.add(job + bJobCount + message);
 						System.out.println("Added job to list");
 						System.out.println("Size " + jobsList.size());
 						bJobCount++;
