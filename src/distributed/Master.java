@@ -54,10 +54,11 @@ public class Master {
 			ReadingThread readingThreadA = new ReadingThread(slaveA, completedJobs, lock, "Slave A");
 			readingThreadA.start();
 			
-			MasterWritingThread writeToClient1 = new MasterWritingThread(socketClient1, socketClient2, completedJobs, lock,"Client 1");
+			MasterWritingThread writeToClient1 = new MasterWritingThread(socketClient1, socketClient2, completedJobs, lock);
+			//MasterWritingThread writeToClient2 = new MasterWritingThread(socketClient1, socketClient2, completedJobs, lock,"Client 2");
+			
 			writeToClient1.start();
-			MasterWritingThread writeToClient2 = new MasterWritingThread(socketClient1, socketClient2, completedJobs, lock,"Client 2");
-			writeToClient2.start();
+			//writeToClient2.start();
 			readFromClient2.join();
 			readFromClient1.join();
 			
@@ -68,7 +69,7 @@ public class Master {
 
 			readingThreadA.join();
 			writeToClient1.join();
-			writeToClient2.join();
+			//writeToClient2.join();
 			//ReadingThread readingThreadB = new ReadingThread(slaveB, completedJobs, lock);
 
 			// START READING THREADS
