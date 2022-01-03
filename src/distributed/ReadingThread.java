@@ -30,12 +30,6 @@ public class ReadingThread extends Thread {
 		String jobWithSource;
 		
 		while (true) {
-			System.out.println("In Reading thread loop");
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 
 			String readingIn = null;
 			try {
@@ -46,7 +40,7 @@ public class ReadingThread extends Thread {
 					continue;
 				} else {
 					synchronized (lock) {
-						System.out.println(readingIn + " received from " + message);
+						System.out.println("\n" + readingIn + " received from " + message);
 						readingList.add(jobWithSource);
 					}
 				}
@@ -56,6 +50,11 @@ public class ReadingThread extends Thread {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			try {
+				sleep(100);
+			} catch(InterruptedException e) {
+				
 			}
 		}
 

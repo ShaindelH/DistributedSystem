@@ -31,8 +31,6 @@ public class WritingThread extends Thread {
 			job = null;
 			if (jobs.size() > 0) {
 				synchronized (lock) {
-
-					
 					jobWithSource = jobs.get(0);
 					job=jobWithSource.substring(0,jobWithSource.length()-1);
 					jobs.remove(jobWithSource);
@@ -43,11 +41,6 @@ public class WritingThread extends Thread {
 				job = null;
 			}
 
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

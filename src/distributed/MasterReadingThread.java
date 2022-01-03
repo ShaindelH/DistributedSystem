@@ -14,6 +14,8 @@ public class MasterReadingThread extends Thread {
 	private ArrayList<String> slaveAJobs;
 	private ArrayList<String> slaveBJobs;
 	private String message;
+	protected static int aCounter = 0;
+	protected static int bCounter = 0;
 
 	public MasterReadingThread(Socket socket, Object lockA, Object lockB, ArrayList<String> slaveAJobs,
 			ArrayList<String> slaveBJobs, String message) {
@@ -37,20 +39,11 @@ public class MasterReadingThread extends Thread {
 		System.out.println("\nMaster reading started");
 		final int OPTIMAL = 2;
 		final int NONOPTIMAL = 10;
-		int aCounter = 0;
-		int bCounter = 0;
-
 		
 		while (true) {
-			String jobWithSource=null;
-			System.out.println("In Master reading loop");
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
+			String jobWithSource = null;			
 			String job = null;
+			
 			try {
 				jobWithSource = reader.readLine();
 				job=jobWithSource.substring(0,jobWithSource.length()-1);
@@ -72,23 +65,33 @@ public class MasterReadingThread extends Thread {
 				if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
 					synchronized (lockA) {
 						slaveAJobs.add(jobWithSource);
+						aCounter++;
 					}
 				} else {
 					synchronized (lockB) {
 						slaveBJobs.add(jobWithSource);
+						bCounter++;
 					}
 				}
 			} else if (job.charAt(0) == 'B') {
 				if (bCounter + OPTIMAL < aCounter + NONOPTIMAL) {
 					synchronized (lockB) {
 						slaveBJobs.add(jobWithSource);
+						bCounter++;
 					}
 				} else {
 					synchronized (lockA) {
 						slaveAJobs.add(jobWithSource);
+						aCounter++;
 					}
 				}
 			}
+			try {
+				sleep(100);
+			} catch(InterruptedException e) {
+				
+			}
 		}
+		
 	}
 }

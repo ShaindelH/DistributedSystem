@@ -41,27 +41,22 @@ public class KeyboardReaderThread extends Thread {
 				synchronized (readingLOCK) {
 					if (job.equals("A")) {
 						jobsList.add(job + aJobCount + message);
-						System.out.println("Added job to list");
-						System.out.println("Size " + jobsList.size());
 						aJobCount++;
 					} else {
 						jobsList.add(job + bJobCount + message);
-						System.out.println("Added job to list");
-						System.out.println("Size " + jobsList.size());
 						bJobCount++;
 					}
 
 				}
 				
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-				
-					e.printStackTrace();
-				}
+				sleep(100);
 
 			} while (!job.equals("Q"));
+			
 		} catch (IOException e) {
+		}
+		catch(InterruptedException e) {
+			
 		}
 
 		System.out.println("Goodbye...");

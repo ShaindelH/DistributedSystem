@@ -14,7 +14,7 @@ public class SlaveA {
 		try (Socket socket = new Socket("127.0.0.1", 9090);) {
 
 			ReadingThread readFromMaster = new ReadingThread(socket, jobs, lock, "Master");
-			SlaveWritingThread writeToMaster = new SlaveWritingThread(socket, jobs, completedJobs, lock);
+			SlaveWritingThread writeToMaster = new SlaveWritingThread(socket, jobs, completedJobs, lock, "Slave A");
 			
 			readFromMaster.start();
 			writeToMaster.start();
