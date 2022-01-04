@@ -29,14 +29,12 @@ public class MasterReadingThread extends Thread {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 		} catch (IOException e) {
-			System.out.println("Error occurred");
-			e.printStackTrace();
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
 		}
 	}
 
 	public void run() {
-
-		System.out.println("\nMaster reading started");
 		final int OPTIMAL = 2;
 		final int NONOPTIMAL = 10;
 		
@@ -48,49 +46,46 @@ public class MasterReadingThread extends Thread {
 				jobWithSource = reader.readLine();
 				job=jobWithSource.substring(0,jobWithSource.length()-1);
 				if (job == null || job.isEmpty() || job.isBlank()) {
-					
 					continue;
 				}
 				else
 					System.out.println(job + " received from " + message);
-			}
-			catch (Exception ex) {
-				
-				ex.printStackTrace();
-
-			}
+			
+			
 			System.out.println("Job " + job);
 			
 			if (job.charAt(0) == 'A') {
 				if (aCounter + OPTIMAL < bCounter + NONOPTIMAL) {
 					synchronized (lockA) {
 						slaveAJobs.add(jobWithSource);
-						aCounter++;
+						aCounter += 2;
 					}
 				} else {
 					synchronized (lockB) {
 						slaveBJobs.add(jobWithSource);
-						bCounter++;
+						bCounter += 10;
 					}
 				}
 			} else if (job.charAt(0) == 'B') {
 				if (bCounter + OPTIMAL < aCounter + NONOPTIMAL) {
 					synchronized (lockB) {
 						slaveBJobs.add(jobWithSource);
-						bCounter++;
+						bCounter += 2;
 					}
 				} else {
 					synchronized (lockA) {
 						slaveAJobs.add(jobWithSource);
-						aCounter++;
+						aCounter += 10;
 					}
 				}
 			}
-			try {
-				sleep(100);
-			} catch(InterruptedException e) {
-				
-			}
+			
+		sleep(100);
+		} catch(InterruptedException | IOException e) {
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
+		}
+		
 		}
 		
 	}

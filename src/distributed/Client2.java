@@ -29,7 +29,8 @@ public class Client2 {
 			
 			
 		} catch (Exception ex) {
-
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
 		}
 
 	}

@@ -23,20 +23,9 @@ public class SlaveB {
 			readFromMaster.join();
 			writeToMaster.join();
 			
-			String job = jobs.get(0);
-			if (job.charAt(0) == 'B') {
-				readFromMaster.sleep(2000);
-				System.out.println("Sleeping 2 seconds");
-			} else {
-				readFromMaster.sleep(10000);
-				System.out.println("Sleeping 10 seconds");
-			}
-			System.out.println("Sending job " + job + " to Master");			
-			completedJobs.add(job);
-			jobs.remove(0);
-
 		} catch (Exception ex) {
-
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
 		}
 	}
 }

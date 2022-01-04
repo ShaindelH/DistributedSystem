@@ -23,7 +23,6 @@ public class WritingThread extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("Writing Thread Running");
 		String jobWithSource;
 		String job;
 		while (true) {
@@ -40,7 +39,13 @@ public class WritingThread extends Thread {
 				System.out.println("Sent job " + job + " to " + message);
 				job = null;
 			}
-
+			
+			try {
+				sleep(100);
+			} catch(InterruptedException ex) {
+				System.out.println("Error occurred. Please try again.");
+				System.exit(0);
+			}
 		}
 	}
 }

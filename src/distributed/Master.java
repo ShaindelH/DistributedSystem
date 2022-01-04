@@ -75,7 +75,8 @@ public class Master {
 			
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
 		}
 
 	}

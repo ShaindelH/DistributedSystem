@@ -28,14 +28,13 @@ public class KeyboardReaderThread extends Thread {
 		try {
 			do {
 				do {
-					System.out.print("Please input job types A/B ");
+					System.out.println("Please input job types A/B or Q to quit");
 					job = input.readLine().toUpperCase();
 
 					if (!job.equals("A") && !job.equals("B") && !job.equals("Q")) {
-						System.out.print("You can only input A/B. Please try again. ");
+						System.out.println("You can only input A/B. Please try again. ");
 						job = input.readLine().toUpperCase();
 					}
-					System.out.println();
 				} while (!job.equals("A") && !job.equals("B"));
 
 				synchronized (readingLOCK) {
@@ -53,10 +52,9 @@ public class KeyboardReaderThread extends Thread {
 
 			} while (!job.equals("Q"));
 			
-		} catch (IOException e) {
-		}
-		catch(InterruptedException e) {
-			
+		} catch (IOException | InterruptedException ex) {
+			System.out.println("Error occurred. Please try again.");
+			System.exit(0);
 		}
 
 		System.out.println("Goodbye...");

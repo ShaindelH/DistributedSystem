@@ -21,7 +21,7 @@ public class ReadingThread extends Thread {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error occurred. Please try again.");
 		}
 	}
 
@@ -40,21 +40,24 @@ public class ReadingThread extends Thread {
 					continue;
 				} else {
 					synchronized (lock) {
-						System.out.println("\n" + readingIn + " received from " + message);
 						readingList.add(jobWithSource);
 					}
 				}
-				if (message.equals("Master")) {
-					System.out.println("Job " + readingIn + " completed");
+				if (readingIn.length() > 8 && readingIn.substring(0,8).equals("Complete")) {
+					System.out.println("Job " + readingIn.substring(8) + " completed");
 				}
-
+				else
+					System.out.println(readingIn + " received from " + message);
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("Error occurred. Please try again.");
+				System.exit(0);
 			}
 			try {
 				sleep(100);
 			} catch(InterruptedException e) {
-				
+				System.out.println("Error occurred. Please try again.");
+				System.exit(0);
 			}
 		}
 

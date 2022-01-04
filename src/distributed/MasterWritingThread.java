@@ -39,31 +39,21 @@ public class MasterWritingThread extends Thread {
 
 				}
 				if (job != null) {
+					//substring to get which client job is going to. Client "1" or "2"
 					if (jobWithSource.substring(jobWithSource.length() - 1).equals("1")) {
-						writerClient1.println(jobWithSource);
-						if (jobWithSource.charAt(0) == 'A') {
-							MasterReadingThread.aCounter--;
-						} else {
-							MasterReadingThread.bCounter--;
-						}
-
+						writerClient1.println("Complete" + jobWithSource);
 					} else {
-						writerClient2.println(jobWithSource);
-						if (jobWithSource.charAt(0) == 'A') {
-							MasterReadingThread.aCounter--;
-						} else {
-							MasterReadingThread.bCounter--;
-						}
+						writerClient2.println("Complete" + jobWithSource);
 					}
 
-					System.out.println(
-							"Sent job " + job + " to Client " + jobWithSource.substring(jobWithSource.length() - 1));
+					System.out.println("Sent job " + job + " to Client " + jobWithSource.substring(jobWithSource.length() - 1));
 				}
 			}
 			try {
 				sleep(100);
 			} catch(InterruptedException e) {
-				
+				System.out.println("Error occurred. Please try again.");
+				System.exit(0);
 			}
 		}
 	}
